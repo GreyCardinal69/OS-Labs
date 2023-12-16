@@ -1,0 +1,186 @@
+// Լաբորատոր աշխատանք 6
+
+//---------------------------------------
+// Հարց 1
+// Գրել սկրիպտ, որը տրված թվի համար կարտածի հաղորդագրություն այն մասին,
+// արդյոք թիվը դրական է, բացասական, թե՝ 0։ Թիվը վավերացնել ռեգուլյար
+// արտահայտության միջոցով։ Պայմանների ստուգման համար օգտագործել [[ ]] օպերատորը։
+
+check_number() {
+	num=$1
+	// Ստուգենք թիվ է արդյոք։
+    if [[ $num =~ ^-?[0-9]+$ ]]; then
+        if [[ $num -lt 0 ]]; then
+            echo "$num is less than 0."
+        elif [[ $num -eq 0 ]]; then
+            echo "$num is equal to 0."
+        else
+            echo "$num is greater than 0."
+        fi
+    else
+        echo "$num is not valid."
+    fi
+}
+
+check_number 10
+
+//---------------------------------------
+// Հարց 2
+// Կատարել 1-ին կետը՝ պայմանների ստուգման համար օգտագործելով (( )) օպերատորը։
+
+check_number() {
+    num=$1
+    if (( num < 0 )); then
+        echo "$num is less than 0."
+    elif (( num == 0 )); then
+        echo "$num is equal to 0."
+    elif (( num > 0 )); then
+        echo "$num is greater than 0."
+    else
+        echo "$num is not valid."
+    fi
+}
+
+check_number -10
+
+//---------------------------------------
+// Հարց 3
+// Գրել սկրիպտ, որը կստուգի, թե արդյոք տրված թիվը 2-ի, 3-ի և 5-ի բազմապատիկ է։
+
+check_multiple() {
+    num=$1
+    if (( num % 2 == 0 )) && (( num % 3 == 0 )) && (( num % 5 == 0 )); then
+        echo "$num is a multiple of 2, 3, and 5."
+    else
+        echo "$num is not a multiple of 2, 3, and 5."
+    fi
+}
+
+check_multiple 30 
+
+//---------------------------------------
+// Հարց 4
+// Գրել սկրիպտ, որը կստուգի, թե արդյոք տրված թիվը 2-ի, 3-ի կամ 5-ի բազմապատիկ է։
+
+check_multiples() {
+    num=$1
+    if (( num % 2 == 0 )) || (( num % 3 == 0 )) || (( num % 5 == 0 )); then
+        echo "$num is a multiple of 2, 3, or 5."
+    else
+        echo "$num is not a multiple of 2, 3, or 5."
+    fi
+}
+
+check_multiples 30 
+
+//---------------------------------------
+// Հարց 5
+// Մեկ հրամանի միջոցով ստեղծել նոր ֆայլ և այդ ֆայլին ավելացնել կատարելու թույլտվություն։
+
+touch new_file.sh && chmod +x new_file.sh
+
+//---------------------------------------
+// Հարց 6
+// Մեկ հրամանի միջոցով ստուգել, թե արդյոք գոյություն ունի dir անունով դիրեկտորիա,
+// և, եթե գոյություն չունի, ապա ստեղծել։
+
+Պատասխան ՝ 
+// [ -d "dir" ] - Ստուգում է դիրեկտորիաի առկայությունը։
+// օգտագործելով ||, եթե dir դիրեկտորիա չկա, ապա այն ստեղծում ենք։
+[ -d "dir" ] || mkdir dir
+
+//---------------------------------------
+// Հարց 7
+// Գրել սկրիպտ, որը կստուգի, թե արդյոք տրված թիվը գտնվում է սահմանված
+// միջակայքում։ Ստուգվող թիվը և միջակայքի սահմանների թվերը ներմուծել read
+// հրամանի միջոցով։ Իրականացնել տվյալների վավերացում։
+
+// Ֆունկցիան ստուգում է, արդյոք արգումենտը թիվ է։
+is_number() {
+    [[ $1 =~ ^[0-9]+$ ]]
+}
+
+read -p "Enter the number to check: " number
+read -p "Enter the minimum range: " min_range
+read -p "Enter the maximum range: " max_range
+
+// Ստուգենք արդյոք արգումենտները թվեր են։
+if ! is_number "$number" || ! is_number "$min_range" || ! is_number "$max_range"; then
+    echo "Please enter valid numeric values."
+    exit 1
+fi
+
+if (( number >= min_range && number <= max_range )); then
+    echo "The number $number is within the range $min_range-$max_range."
+else
+    echo "The number $number is not within the range $min_range-$max_range."
+fi
+
+//---------------------------------------
+// Հարց 8
+// Գրել սկրիպտ, որը որպես ներմուծվող արժեք կստանա մեկ բառ, և կստուգի արդյոք այն
+// համընկնում է "Secret" բառի հետ։ read հրամանը կատարել այնպես, որ ներմուծված
+// արժեք պահպանվի REPLY փոփոխականի մեջ, իսկ ներմուծումն իրականացնելիս
+// տառերը չցուցադրվեն էկրանին։
+
+// օգտագործելով -s ( silent ) հրամանը ներմուծված տառերը չեն չցուցադրվելու էկրանին։
+read -s -p "Enter a word: " REPLY
+
+if [ "$REPLY" = "Secret" ]; then
+    echo "The word matchees."
+else
+    echo "The word doesn't match."
+fi
+
+//---------------------------------------
+// Հարց 9
+// Գրել սկրիպտ, որը որպես ներմուծվող արժեք կստանա ֆայլի անուն։ Վավերացնել
+// անունը հետևյալ կանոններով․ կարող է պարունակել տառեր, թվեր, - . _ սիմվոլները։
+// Եթե նման ֆայլ գոյություն չունի, ապա ստեղծել։ Ցուցադրել համապատասխան
+// հաղորդագրություն ֆայլի ստեղծման կամ առկայության մասին
+
+read -p "Enter a file name: " fileName
+
+// Ստուգենք եթե ֆայլի անունը խախտում է կանոնները։
+if [[ "$fileName" =~ ^[A-Za-z0-9._-]+$ ]]; then
+	// -e ( exists ) հրամանը ստուգումէ ֆայլի առկայությունը։
+    if [ -e "$fileName" ]; then
+        echo "The file '$fileName' already exists."
+    else
+        touch "$fileName"
+        echo "The file '$fileName' has been created."
+    fi
+else
+    echo "Invalid file name."
+fi
+
+//---------------------------------------
+// Հարց 10
+// Գրել <<Հաշվիչ>> ծրագիր, որը կստանա ճիշտ 3 արժեք հետևյալ հաջորդականությամբ․
+// թիվ, գործողություն, թիվ։ Օր՝ 2 + 3։ Ստուգել ներմուծված արժեքների քանակը, և 3-ից
+// տարբեր լինելու դեպքում արտածել հաղորդագրություն սխալի մասին։ Իրականացնել
+// արժեքների վավերացում։ Գործողության համար սահմանել հետևյալ ընդունելի
+// արժեքները․ + - * / **։ Արտածել գործողության արդյունքը
+
+read -p "Enter number, operator, number" num1 operator num2
+
+// Ստուգենք եթե արգումենտներից որևէ մեկը ունի 0 երկարություն։
+if [[ -z $num1 || -z $operator || -z $num2 ]]; then
+    echo "Error: Please provide three inputs - number, operator, number."
+    exit 1
+fi
+
+// Ստուգենք արդյոք num1 և num2-ը թվեր են։
+if ! [[ $num1 =~ ^[0-9]+$ ]] || ! [[ $num2 =~ ^[0-9]+$ ]]; then
+    echo "Error: Invalid number(s)."
+    exit 1
+fi
+
+// Ստուգենք օպերատորը։
+if [[ ! $operator =~ ^[-+*/**]$ ]]; then
+    echo "Error: Invalid operator․"
+    exit 1
+fi
+
+result=$(awk "BEGIN {print $num1 $operator $num2}")
+echo "$result"
